@@ -1,0 +1,27 @@
+version: '3.9'
+
+services:
+  redis:
+    container_name: duck_redis
+    image: redis:latest
+    command: >
+      redis-server --save 20 1 --loglevel warning 
+      --requirepass 123
+    volumes:
+      - cache:/data
+    ports:
+     - 6379:6379
+  db:
+    image: postgres
+    container_name: duck_db
+    environment:
+      - POSTGRES_PASSWORD=123
+      - POSTGRES_USER=admin
+      - POSTGRES_DB=duck_db
+    ports:
+      - 5432:5432
+
+volumes:
+  data:
+  cache:
+    driver: local
