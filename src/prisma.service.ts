@@ -12,4 +12,8 @@ export class PrismaService extends PrismaClient implements OnModuleInit{
             await app.close();
         });
     };
+
+    async countCaseSensitive(table: string, field: string, value: string): Promise<number>{
+        return await this.$queryRawUnsafe(`select COUNT(*) from "${table}" WHERE "${field}" ILIKE '${value}'` );
+    }
 };

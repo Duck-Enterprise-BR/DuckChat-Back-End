@@ -14,17 +14,23 @@ export class UserService {
   ){ }
 
   async login(loginUserDto: LoginUserDto){
-    const checkEmail = await this.prisma.user.findFirst({
+    const checkProfile = await this.prisma.user.findFirst({
       where: {
         email: loginUserDto.email
+      },
+      select: {
+        email: true,
+        name: true,
+        avatar: true,
+        password: true
       }
     });
 
-    if(!checkEmail){
+    if(!checkProfile){
       throw new NotFoundException("Login or Password not found");
     };
 
-    const { password } = checkEmail;
+    const { password } = checkProfile;
 
     const checkPassword = await this.crypto.compare(loginUserDto.password, password);
 
@@ -32,19 +38,21 @@ export class UserService {
       throw new NotFoundException("Login or Password not found");
     };
 
-    return {
-      message: 'success'
-    }
+    delete checkProfile.password;
+
+    return checkProfile
   }
 
   async create(data: CreateUserDto) {
-    const checkEmail = await this.prisma.user.findFirst({
-      where: {
-        email: data.email
-      }
-    });
+    const checkAlreadyExistsUsername = await this.prisma.countCaseSensitive("users", "username", data.username);
 
-    if(checkEmail){
+    if(checkAlreadyExistsUsername){
+      throw new BadRequestException("Username already create");
+    }
+
+    const checkAlreadyExistsEmail = await this.prisma.countCaseSensitive("users", "email", data.email);
+    
+    if(checkAlreadyExistsEmail){
       throw new BadRequestException("Email already create");
     }
 
@@ -52,24 +60,9 @@ export class UserService {
       data: {
         email: data.email,
         name: data.name,
+        username: data.username,
         password: await this.crypto.hash(data.password)
       }
     });
-  }
-
-  findAll() {
-    return `This action returns all user`;
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
-  }
-
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} user`;
   }
 }
