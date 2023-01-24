@@ -13,36 +13,6 @@ export class UserService {
     private crypto: CryptoService
   ){ }
 
-  async login(loginUserDto: LoginUserDto){
-    const checkProfile = await this.prisma.user.findFirst({
-      where: {
-        email: loginUserDto.email
-      },
-      select: {
-        email: true,
-        name: true,
-        avatar: true,
-        password: true
-      }
-    });
-
-    if(!checkProfile){
-      throw new NotFoundException("Login or Password not found");
-    };
-
-    const { password } = checkProfile;
-
-    const checkPassword = await this.crypto.compare(loginUserDto.password, password);
-
-    if(!checkPassword){
-      throw new NotFoundException("Login or Password not found");
-    };
-
-    delete checkProfile.password;
-
-    return checkProfile
-  }
-
   async create(data: CreateUserDto) {
     const checkAlreadyExistsUsername = await this.prisma.countCaseSensitive("users", "username", data.username);
 
