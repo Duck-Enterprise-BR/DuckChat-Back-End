@@ -1,10 +1,7 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
-import { Prisma } from '@prisma/client';
 import { CryptoService } from 'src/crypto/crypto.service';
 import { PrismaService } from 'src/prisma.service';
 import { CreateUserDto } from './dto/create-user.dto';
-import { LoginUserDto } from './dto/login-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
 
 @Injectable()
 export class UserService {
@@ -32,6 +29,20 @@ export class UserService {
         name: data.name,
         username: data.username,
         password: await this.crypto.hash(data.password)
+      }
+    });
+  }
+
+  async getMyProfile(userId: number){
+    return await this.prisma.user.findFirst({
+      where: {
+        id: userId
+      },
+      select: {
+        email: true,
+        name: true,
+        avatar: true,
+        username: true
       }
     });
   }

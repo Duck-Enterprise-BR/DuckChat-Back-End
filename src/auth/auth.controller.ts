@@ -8,7 +8,6 @@ export class AuthController {
   constructor(
     private readonly authService: AuthService,
   ) {}
-
  
   @Post("/login")
   login(@Body() props: AuthLoginDto){
