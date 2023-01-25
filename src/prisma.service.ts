@@ -13,7 +13,7 @@ export class PrismaService extends PrismaClient implements OnModuleInit{
         });
     };
 
-    async countCaseSensitive(table: string, field: string, value: string): Promise<number>{
-        return await this.$queryRawUnsafe(`select COUNT(*) from "${table}" WHERE "${field}" ILIKE '${value}'` );
+    async countCaseSensitive(table: string, field: string, value: string): Promise<string[]>{
+        return await this.$queryRawUnsafe(`select id from "${table}" WHERE "${field}" ILIKE '${value}'` );
     }
 };

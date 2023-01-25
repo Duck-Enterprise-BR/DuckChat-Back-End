@@ -16,13 +16,13 @@ export class UserService {
   async create(data: CreateUserDto) {
     const checkAlreadyExistsUsername = await this.prisma.countCaseSensitive("users", "username", data.username);
 
-    if(checkAlreadyExistsUsername){
+    if(checkAlreadyExistsUsername.length){
       throw new BadRequestException("Username already create");
     }
 
     const checkAlreadyExistsEmail = await this.prisma.countCaseSensitive("users", "email", data.email);
     
-    if(checkAlreadyExistsEmail){
+    if(checkAlreadyExistsEmail.length){
       throw new BadRequestException("Email already create");
     }
 
