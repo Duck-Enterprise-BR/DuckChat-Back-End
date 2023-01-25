@@ -5,6 +5,7 @@ import { UserModule } from './user/user.module';
 import { CryptoService } from './crypto/crypto.service';
 import { AuthModule } from './auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
+import { FriendModule } from './friend/friend.module';
 
 @Module({
   imports: [
@@ -13,7 +14,8 @@ import { ConfigModule } from '@nestjs/config';
     ConfigModule.forRoot({
       envFilePath: ".env",
       isGlobal: true
-    })
+    }),
+    FriendModule
   ],
   controllers: [AppController],
   providers: [AppService, CryptoService],

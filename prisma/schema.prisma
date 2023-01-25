@@ -16,6 +16,16 @@ model User {
   updatedAt DateTime @updatedAt
   password  String
   username  String
+  friends   Friend[]
 
   @@map("users")
+}
+
+model Friend {
+  id         Int  @id @default(autoincrement())
+  my_user_id Int
+  user_id    Int
+  myUser     User @relation(fields: [my_user_id], references: [id])
+
+  @@map("friends")
 }
