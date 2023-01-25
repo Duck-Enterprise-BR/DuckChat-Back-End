@@ -35,4 +35,12 @@ export class UserService {
       }
     });
   }
+
+  async findOne(email: string){
+    return await this.prisma.user.findFirst({
+      where: {
+        email: email
+      }
+    })
+  }
 }
