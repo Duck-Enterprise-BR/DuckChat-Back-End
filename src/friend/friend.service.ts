@@ -1,7 +1,5 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma.service';
-import { CreateFriendDto } from './dto/create-friend.dto';
-import { UpdateFriendDto } from './dto/update-friend.dto';
 
 @Injectable()
 export class FriendService {
@@ -41,28 +39,18 @@ export class FriendService {
       }
     })
   }
-
-  findAll() {
-    return `This action returns all friend`;
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} friend`;
-  }
-
   async myList(myUserId: number){
     return await this.prismaService.friend.findMany({
       where: {
         my_user_id: myUserId
       },
+      include: {
+        friend: {
+          select: {
+            name: true
+          },
+        }
+      }
     })
-  }
-
-  update(id: number, updateFriendDto: UpdateFriendDto) {
-    return `This action updates a #${id} friend`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} friend`;
   }
 }

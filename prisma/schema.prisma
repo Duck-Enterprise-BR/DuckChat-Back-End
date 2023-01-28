@@ -29,8 +29,8 @@ model SolicitedFriend {
   created_at      DateTime  @default(now())
   updated_at      DateTime  @updatedAt
   recusuted_at    DateTime?
-  target_by    User      @relation(fields: [target_by_id], references: [id])
-  status          String    
+  target_by       User      @relation(fields: [target_by_id], references: [id])
+  status          String
 
   @@map("solicited_friend")
 }
@@ -39,7 +39,7 @@ model Friend {
   id         Int  @id @default(autoincrement())
   my_user_id Int
   user_id    Int
-  myUser     User @relation(fields: [my_user_id], references: [id])
+  friend     User @relation(fields: [user_id], references: [id])
 
   @@map("friends")
 }
