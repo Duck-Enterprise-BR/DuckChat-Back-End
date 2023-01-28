@@ -40,4 +40,11 @@ export class SolicitedFriendController {
     const userId = req.user.userId;
     return this.solicitedFriendService.findAll(userId);
   }
+
+  @UseGuards(JwtAuthGuard)
+  @Get("/mySolicitationToApprovedOrReproved")
+  mySolicitationToApprovedOrReproved(@Request() req) {
+    const userId = req.user.userId;
+    return this.solicitedFriendService.mySolicitationsToApprovedOrReproved(userId);
+  }
 }

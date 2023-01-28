@@ -39,6 +39,7 @@ export class UserService {
         id: userId
       },
       select: {
+        id: true,
         email: true,
         name: true,
         avatar: true,
@@ -62,6 +63,21 @@ export class UserService {
     return await this.prisma.user.findFirst({
       where: {
         email: email
+      }
+    })
+  }
+
+  async findMany(ids: number[]){
+    return await this.prisma.user.findMany({
+      where: {
+        id: {
+          in: ids
+        }
+      },
+      select: {
+        id: true,
+        name: true,
+        avatar: true
       }
     })
   }

@@ -32,7 +32,14 @@ export class FriendService {
       return checkRelationship;
     };
 
-    return await this.prismaService.friend.create({
+    await this.prismaService.friend.create({
+      data: {
+        user_id: myUserId,
+        my_user_id: partnerId
+      }
+    })
+
+    await this.prismaService.friend.create({
       data: {
         user_id: partnerId,
         my_user_id: myUserId

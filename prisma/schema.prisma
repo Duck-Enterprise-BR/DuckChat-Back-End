@@ -24,7 +24,7 @@ model User {
 
 model SolicitedFriend {
   id              String    @id @unique @default(uuid())
-  solicited_by_id Int
+  solicited_by_id Int       
   target_by_id    Int
   created_at      DateTime  @default(now())
   updated_at      DateTime  @updatedAt

@@ -5,6 +5,7 @@ import { UserService } from 'src/user/user.service';
 import { CreateSolicitedFriendDto } from './dto/create-solicited-friend.dto';
 import { UpdateSolicitedFriendDto } from './dto/update-solicited-friend.dto';
 import { SolicitedFriendTypes } from './interfaces/solicited-friend-types';
+import { mySolicitationToApprovedOrReproved } from './interfaces/solicited-friend.interface';
 
 @Injectable()
 export class SolicitedFriendService {
@@ -47,6 +48,49 @@ export class SolicitedFriendService {
     });
   }
 
+  async mySolicitationsToApprovedOrReproved(userId: number){
+    const solicitedDatabaseIds = await this.prismaService.solicitedFriend.findMany({
+      where: {
+        target_by_id: userId,
+        status: "PENDING"
+      },
+      select: {
+        id: true,
+        solicited_by_id: true,
+      },
+    });
+
+    if(!solicitedDatabaseIds.length){
+      return [];
+    }
+
+    const solicitedUsers = solicitedDatabaseIds.map((item) => { 
+      return {
+        solicited_by_id: item.solicited_by_id,
+        id: item.id
+      }
+    });
+    const solicitedUserIds = solicitedDatabaseIds.map((item) => { return item.solicited_by_id });
+    const userList = await this.userService.findMany(solicitedUserIds);
+    const response: mySolicitationToApprovedOrReproved[] = [];
+
+    for(const solicited of solicitedUsers){
+      const checkUser = userList.find((element => element.id === solicited.solicited_by_id));
+
+      if(!checkUser){
+        continue;
+      }
+
+      response.push({
+        id: solicited.id,
+        name: checkUser.name,
+        avatar: checkUser.avatar,
+      })
+    };
+
+    return response;
+  }
+
   async approvedOrReproved(id: string, userId: number, status: SolicitedFriendTypes){
     const validStatus: SolicitedFriendTypes[] = ["APPROVED", "REPROVED"];
     
@@ -75,7 +119,7 @@ export class SolicitedFriendService {
         }
       });
 
-      await this.friendService.create(userId, checkValidId.target_by_id);
+      await this.friendService.create(userId, checkValidId.solicited_by_id);
       return save;
     };
 
