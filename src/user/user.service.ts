@@ -47,6 +47,17 @@ export class UserService {
     });
   }
 
+  async checkExists(userId: number){
+    return await this.prisma.user.findFirst({
+      where: {
+        id: userId
+      },
+      select: {
+        id: true
+      }
+    })
+  }
+
   async findOne(email: string){
     return await this.prisma.user.findFirst({
       where: {

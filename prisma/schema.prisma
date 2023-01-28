@@ -8,17 +8,31 @@ datasource db {
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
-  email     String   @unique
-  name      String
-  avatar    String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  password  String
-  username  String
-  friends   Friend[]
+  id           Int               @id @default(autoincrement())
+  email        String            @unique
+  name         String
+  avatar       String?
+  createdAt    DateTime          @default(now())
+  updatedAt    DateTime          @updatedAt
+  password     String
+  username     String
+  friends      Friend[]
+  solicited_by SolicitedFriend[]
 
   @@map("users")
+}
+
+model SolicitedFriend {
+  id              String    @id @unique @default(uuid())
+  solicited_by_id Int
+  target_by_id    Int
+  created_at      DateTime  @default(now())
+  updated_at      DateTime  @updatedAt
+  recusuted_at    DateTime?
+  target_by    User      @relation(fields: [target_by_id], references: [id])
+  status          String    
+
+  @@map("solicited_friend")
 }
 
 model Friend {

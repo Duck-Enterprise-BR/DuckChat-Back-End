@@ -30,8 +30,8 @@ export class FriendService {
       },
     });
 
-    if(!checkRelationship){
-      throw new BadRequestException("Friend already create");
+    if(checkRelationship){
+      return checkRelationship;
     };
 
     return await this.prismaService.friend.create({

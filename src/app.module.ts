@@ -6,6 +6,7 @@ import { CryptoService } from './crypto/crypto.service';
 import { AuthModule } from './auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
 import { FriendModule } from './friend/friend.module';
+import { SolicitedFriendModule } from './solicited-friend/solicited-friend.module';
 
 @Module({
   imports: [
@@ -15,7 +16,8 @@ import { FriendModule } from './friend/friend.module';
       envFilePath: ".env",
       isGlobal: true
     }),
-    FriendModule
+    FriendModule,
+    SolicitedFriendModule
   ],
   controllers: [AppController],
   providers: [AppService, CryptoService],
