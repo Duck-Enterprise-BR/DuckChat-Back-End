@@ -81,4 +81,15 @@ export class UserService {
       }
     })
   }
+
+  async updateProfile(userId: number, url: string){
+    return await this.prisma.user.update({
+      where: {
+        id: userId
+      },
+      data: {
+        avatar: url
+      }
+    })
+  }
 }
